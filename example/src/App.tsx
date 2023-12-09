@@ -1,11 +1,13 @@
-import * as React from 'react';
+import React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { ProgressStepper } from 'react-native-reanimated-progress-steps';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello</Text>
+      <ProgressStepper />
     </View>
   );
 }
