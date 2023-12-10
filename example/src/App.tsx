@@ -7,7 +7,7 @@ import { ProgressStepper } from 'react-native-reanimated-progress-steps';
 export default function App() {
   return (
     <View style={styles.container}>
-      <ProgressStepper />
+      <ProgressStepper prevPosition={0} currentPosition={3} />
     </View>
   );
 }
@@ -15,7 +15,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

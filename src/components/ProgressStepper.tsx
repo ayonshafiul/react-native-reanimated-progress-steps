@@ -14,7 +14,7 @@ import Animated, {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const LABELS = ['Step 1', 'Step 2', 'Step 3'];
+const LABELS = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5', 'Step 6'];
 const STEP_CARD_WIDTH = 60;
 const CONTAINER_HEIGHT = 90;
 const PROGRESS_HEIGHT = 6;
@@ -71,7 +71,7 @@ function ProgressStepper({
     backgroundColor: interpolateColor(
       colorChange.value,
       [0, 1],
-      ['red', 'blue']
+      ['grey', 'red']
     ),
   }));
 
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   stepProgress: {
-    backgroundColor: 'orange',
+    backgroundColor: 'red',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   stepCardBox: {
     width: STEP_CARD_WIDTH - 20,
     height: STEP_CARD_WIDTH - 20,
+    borderRadius: (STEP_CARD_WIDTH - 20) / 2,
     bottom: 8,
     borderWidth: 4,
     justifyContent: 'center',
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   stepCardBoxActive: {
-    backgroundColor: 'orange',
+    backgroundColor: 'red',
   },
 });
 
