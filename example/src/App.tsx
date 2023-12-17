@@ -1,16 +1,32 @@
 import React from 'react';
 
-import { StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 
-import { ProgressStepper } from 'react-native-reanimated-progress-steps';
+import {
+  ProgressStepperContextProvider,
+  ProgressStepperMultiPage,
+  useProgressStepperContext,
+} from 'react-native-reanimated-progress-steps';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ProgressStepper prevPosition={0} currentPosition={3} />
-    </View>
+    <ProgressStepperContextProvider>
+      <ProgressStepperExample />
+    </ProgressStepperContextProvider>
   );
 }
+
+const ProgressStepperExample = () => {
+  const { currentPosition, goToNext, goToPrevious } =
+    useProgressStepperContext();
+  return (
+    <View style={styles.container}>
+      <ProgressStepperMultiPage currentPosition={currentPosition} />
+      <Button title="Previous" onPress={goToPrevious} />
+      <Button title="Next" onPress={goToNext} />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
