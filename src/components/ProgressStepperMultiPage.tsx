@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
@@ -7,7 +7,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
@@ -25,22 +24,22 @@ const ProgressStepperMultiPage = ({
   currentPosition = 0,
   animationDuration = 300,
   animationDelay = 700,
-  trackStyles = {},
-  trackActiveStyles = {},
   stepBoxStyle = {},
-  stepBoxActiveStyle = {},
   showLabels = true,
+  activeColor = '#FF0000',
+  inactiveColor = '#DEDEDE',
 }) => {
   // need one extra steps
   const progress_steps = steps.length + 1;
+  const prevPosition = useRef(0);
   const perStepWidth = width / progress_steps;
   const progress = useSharedValue(perStepWidth * currentPosition);
   const scale = useSharedValue(1);
   const colorChange = useSharedValue(0);
 
-  useEffect(() => {
+  const animateForward = (position: number) => {
     colorChange.value = 0;
-    const widthValueForStep = perStepWidth * currentPosition;
+    const widthValueForStep = perStepWidth * position;
     progress.value = withDelay(
       animationDelay,
       withTiming(
@@ -49,11 +48,41 @@ const ProgressStepperMultiPage = ({
           duration: animationDuration,
         },
         () => {
-          scale.value = withSpring(1.15);
           colorChange.value = withTiming(1);
         }
       )
     );
+  };
+
+  const animateBackward = (position: number) => {
+    colorChange.value = 1;
+    colorChange.value = withDelay(
+      animationDelay,
+      withTiming(
+        0,
+        {
+          duration: animationDuration,
+        },
+        () => {
+          const widthValueForStep = perStepWidth * position;
+          progress.value = withDelay(
+            animationDelay,
+            withTiming(widthValueForStep, {
+              duration: animationDuration,
+            })
+          );
+        }
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (prevPosition.current < currentPosition) {
+      animateForward(currentPosition);
+    } else {
+      animateBackward(currentPosition);
+    }
+    prevPosition.current = currentPosition;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPosition]);
 
@@ -66,15 +95,24 @@ const ProgressStepperMultiPage = ({
     backgroundColor: interpolateColor(
       colorChange.value,
       [0, 1],
-      ['#DEDEDE', 'red']
+      [inactiveColor, activeColor]
     ),
   }));
 
+  const activeBgStyle = {
+    backgroundColor: activeColor,
+  };
+  const inactiveBgStyle = {
+    backgroundColor: inactiveColor,
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.progressContainer, { width: width }, trackStyles]}>
+      <View
+        style={[styles.progressContainer, { width: width }, inactiveBgStyle]}
+      >
         <Animated.View
-          style={[styles.stepProgress, trackActiveStyles, animatedStyle]}
+          style={[styles.stepProgress, animatedStyle, activeBgStyle]}
         />
       </View>
       <View style={styles.stepContainer}>
@@ -102,11 +140,16 @@ const ProgressStepperMultiPage = ({
                 style={[
                   styles.stepCardBox,
                   stepBoxStyle,
-                  stepBoxActiveStyle,
-                  currentPosition > index + 1
-                    ? styles.stepCardBoxActive
-                    : styles.stepCardBox,
-                  currentPosition === index + 1 ? animatedColor : null,
+                  inactiveBgStyle,
+                  currentPosition > index + 1 ? activeBgStyle : null,
+                  currentPosition > prevPosition.current &&
+                  currentPosition === index + 1
+                    ? animatedColor
+                    : inactiveBgStyle,
+                  currentPosition < prevPosition.current &&
+                  currentPosition === index
+                    ? animatedColor
+                    : null,
                 ]}
               >
                 <Text style={styles.stepCardText}>{index + 1}</Text>
@@ -130,7 +173,6 @@ const styles = StyleSheet.create({
     top: CONTAINER_HEIGHT / 2 - PROGRESS_HEIGHT / 2,
     left: 0,
     height: PROGRESS_HEIGHT,
-    backgroundColor: '#DEDEDE',
   },
   stepContainer: {
     width: windowWidth,
@@ -140,7 +182,6 @@ const styles = StyleSheet.create({
     left: 0,
   },
   stepProgress: {
-    backgroundColor: 'red',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -172,10 +213,9 @@ const styles = StyleSheet.create({
     height: STEP_CARD_WIDTH - 20,
     borderRadius: (STEP_CARD_WIDTH - 20) / 2,
     bottom: 8,
-    borderWidth: 4,
+    borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#DEDEDE',
     borderColor: 'white',
   },
   stepCardBoxActive: {

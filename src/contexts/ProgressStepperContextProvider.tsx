@@ -19,11 +19,9 @@ export default function ProgressStepperContextProvider({
 }: ProgressStepperContextProviderProps) {
   const [currentPosition, setCurrentPosition] = useState<number>(0);
   const goToNext = () => {
-    console.log(currentPosition);
     setCurrentPosition((prevPosition) => prevPosition + 1);
   };
   const goToPrevious = () => {
-    console.log('hello');
     setCurrentPosition((prevPosition) => prevPosition - 1);
   };
   return (
