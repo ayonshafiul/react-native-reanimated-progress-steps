@@ -141,7 +141,6 @@ const ProgressStepperMultiPage = ({
                   styles.stepCardBox,
                   stepBoxStyle,
                   inactiveBgStyle,
-                  currentPosition > index + 1 ? activeBgStyle : null,
                   currentPosition > prevPosition.current &&
                   currentPosition === index + 1
                     ? animatedColor
