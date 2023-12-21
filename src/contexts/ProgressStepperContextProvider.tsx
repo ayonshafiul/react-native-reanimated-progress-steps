@@ -6,7 +6,6 @@ export type ProgressStepperContextProviderProps = {
 
 export type ProgressStepperContextValue = {
   currentPosition: number;
-  setCurrentPosition: React.Dispatch<React.SetStateAction<number>>;
   goToNext: () => void;
   goToPrevious: () => void;
 };
@@ -18,6 +17,7 @@ export default function ProgressStepperContextProvider({
   children,
 }: ProgressStepperContextProviderProps) {
   const [currentPosition, setCurrentPosition] = useState<number>(0);
+
   const goToNext = () => {
     setCurrentPosition((prevPosition) => prevPosition + 1);
   };
@@ -26,7 +26,7 @@ export default function ProgressStepperContextProvider({
   };
   return (
     <ProgressStepperContext.Provider
-      value={{ currentPosition, setCurrentPosition, goToNext, goToPrevious }}
+      value={{ currentPosition, goToNext, goToPrevious }}
     >
       {children}
     </ProgressStepperContext.Provider>

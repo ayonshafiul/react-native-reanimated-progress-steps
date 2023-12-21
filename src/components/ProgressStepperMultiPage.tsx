@@ -1,102 +1,60 @@
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect } from 'react';
 
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 import Animated, {
-  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
+import useProgressStepperContext from '../hooks/useProgressStepperContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const STEPS = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5', 'Step 6'];
-const STEP_CARD_WIDTH = 60;
+const STEPS = ['Step 1', 'Step 2', 'Step 3'];
+const STEP_CARD_WIDTH = 40;
 const CONTAINER_HEIGHT = 90;
 const PROGRESS_HEIGHT = 6;
 
 const ProgressStepperMultiPage = ({
   width = windowWidth,
   steps = STEPS,
-  currentPosition = 0,
   animationDuration = 300,
-  animationDelay = 700,
+  animationDelay = 200,
   stepBoxStyle = {},
   showLabels = true,
   activeColor = '#FF0000',
   inactiveColor = '#DEDEDE',
 }) => {
   // need one extra steps
+  const { currentPosition } = useProgressStepperContext();
   const progress_steps = steps.length + 1;
-  const prevPosition = useRef(0);
+
   const perStepWidth = width / progress_steps;
   const progress = useSharedValue(perStepWidth * currentPosition);
-  const scale = useSharedValue(1);
   const colorChange = useSharedValue(0);
 
-  const animateForward = (position: number) => {
+  const animateProgress = (position: number) => {
     colorChange.value = 0;
     const widthValueForStep = perStepWidth * position;
     progress.value = withDelay(
       animationDelay,
-      withTiming(
-        widthValueForStep,
-        {
-          duration: animationDuration,
-        },
-        () => {
-          colorChange.value = withTiming(1);
-        }
-      )
-    );
-  };
-
-  const animateBackward = (position: number) => {
-    colorChange.value = 1;
-    colorChange.value = withDelay(
-      animationDelay,
-      withTiming(
-        0,
-        {
-          duration: animationDuration,
-        },
-        () => {
-          const widthValueForStep = perStepWidth * position;
-          progress.value = withDelay(
-            animationDelay,
-            withTiming(widthValueForStep, {
-              duration: animationDuration,
-            })
-          );
-        }
-      )
+      withTiming(widthValueForStep, {
+        duration: animationDuration,
+      })
     );
   };
 
   useEffect(() => {
-    if (prevPosition.current < currentPosition) {
-      animateForward(currentPosition);
-    } else {
-      animateBackward(currentPosition);
-    }
-    prevPosition.current = currentPosition;
+    animateProgress(currentPosition);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPosition]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     width: progress.value,
-  }));
-
-  const animatedColor = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    backgroundColor: interpolateColor(
-      colorChange.value,
-      [0, 1],
-      [inactiveColor, activeColor]
-    ),
   }));
 
   const activeBgStyle = {
@@ -140,15 +98,7 @@ const ProgressStepperMultiPage = ({
                 style={[
                   styles.stepCardBox,
                   stepBoxStyle,
-                  inactiveBgStyle,
-                  currentPosition > prevPosition.current &&
-                  currentPosition === index + 1
-                    ? animatedColor
-                    : inactiveBgStyle,
-                  currentPosition < prevPosition.current &&
-                  currentPosition === index
-                    ? animatedColor
-                    : null,
+                  currentPosition > index ? activeBgStyle : inactiveBgStyle,
                 ]}
               >
                 <Text style={styles.stepCardText}>{index + 1}</Text>
@@ -208,9 +158,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   stepCardBox: {
-    width: STEP_CARD_WIDTH - 20,
-    height: STEP_CARD_WIDTH - 20,
-    borderRadius: (STEP_CARD_WIDTH - 20) / 2,
+    width: STEP_CARD_WIDTH,
+    height: STEP_CARD_WIDTH,
+    borderRadius: STEP_CARD_WIDTH / 2,
     bottom: 8,
     borderWidth: 2,
     justifyContent: 'center',
@@ -222,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProgressStepperMultiPage;
+export default memo(ProgressStepperMultiPage);

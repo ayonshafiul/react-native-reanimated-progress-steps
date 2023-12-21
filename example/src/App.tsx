@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button, StyleSheet, View } from 'react-native';
 
@@ -17,13 +17,14 @@ export default function App() {
 }
 
 const ProgressStepperExample = () => {
-  const { currentPosition, goToNext, goToPrevious } =
-    useProgressStepperContext();
+  const { goToNext, goToPrevious } = useProgressStepperContext();
+  const [count, setCount] = useState(0);
   return (
     <View style={styles.container}>
-      <ProgressStepperMultiPage currentPosition={currentPosition} />
+      <ProgressStepperMultiPage />
       <Button title="Previous" onPress={goToPrevious} />
       <Button title="Next" onPress={goToNext} />
+      <Button title={`${count}`} onPress={() => setCount((p) => p + 1)} />
     </View>
   );
 };
