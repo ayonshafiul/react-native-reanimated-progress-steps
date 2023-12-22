@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import Animated, {
   useAnimatedStyle,
@@ -10,13 +10,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import useProgressStepperContext from '../hooks/useProgressStepperContext';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-const STEP_CARD_WIDTH = 40;
-const CONTAINER_HEIGHT = 90;
-const TRACK_HEIGHT = 6;
-
 const ProgressStepperMultiPage = ({}) => {
   // need one extra steps
   const {
@@ -25,10 +18,13 @@ const ProgressStepperMultiPage = ({}) => {
     steps,
     animationDelay,
     animationDuration,
-    stepBoxStyle,
+    stepStyle,
     showLabels,
     activeColor,
     inactiveColor,
+    trackHeight,
+    containerHeight,
+    stepWidth,
   } = useProgressStepperContext();
   const progress_steps = steps.length + 1;
 
@@ -64,21 +60,58 @@ const ProgressStepperMultiPage = ({}) => {
     backgroundColor: inactiveColor,
   };
 
+  const containerHeightStyle = {
+    height: containerHeight,
+  };
+
+  const stepWrapperStyle = {
+    width: width,
+  };
+
+  const stepWidthStyle = {
+    width: stepWidth,
+  };
+
+  const trackHeightStyle = {
+    height: trackHeight,
+  };
+
+  const trackContainerPositionStyle = {
+    top: containerHeight / 2 - trackHeight / 2,
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={[styles.trackContainer, { width: width }, inactiveBgStyle]}>
+    <View style={[styles.container, containerHeightStyle]}>
+      <View
+        style={[
+          styles.trackContainer,
+          { width: width },
+          trackHeightStyle,
+          trackContainerPositionStyle,
+          inactiveBgStyle,
+        ]}
+      >
         <Animated.View
-          style={[styles.trackProgress, trackProgressAnimated, activeBgStyle]}
+          style={[
+            styles.trackProgress,
+            trackHeightStyle,
+            trackProgressAnimated,
+            activeBgStyle,
+          ]}
         />
       </View>
-      <View style={styles.stepWrapper}>
+      <View
+        style={[styles.stepWrapper, containerHeightStyle, stepWrapperStyle]}
+      >
         {steps.map((label, index) => {
           return (
             <View
               key={index}
               style={[
-                styles.stepContainer,
-                { left: perStepWidth * (index + 1) - STEP_CARD_WIDTH / 2 },
+                styles.stepContainerStyle,
+                stepWidthStyle,
+                containerHeightStyle,
+                { left: perStepWidth * (index + 1) - stepWidth / 2 },
               ]}
             >
               {showLabels && (
@@ -87,15 +120,13 @@ const ProgressStepperMultiPage = ({}) => {
                     styles.stepLabel,
                     currentPosition > index ? styles.stepLabelActive : null,
                   ]}
-                  numberOfLines={1}
                 >
                   {label}
                 </Text>
               )}
               <Animated.View
                 style={[
-                  styles.step,
-                  stepBoxStyle,
+                  stepStyle,
                   currentPosition > index ? activeBgStyle : inactiveBgStyle,
                 ]}
               >
@@ -111,41 +142,36 @@ const ProgressStepperMultiPage = ({}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: windowHeight,
-    height: CONTAINER_HEIGHT,
     position: 'relative',
   },
   trackContainer: {
     position: 'absolute',
-    top: CONTAINER_HEIGHT / 2 - TRACK_HEIGHT / 2,
     left: 0,
-    height: TRACK_HEIGHT,
   },
   stepWrapper: {
-    width: windowWidth,
-    height: CONTAINER_HEIGHT,
     position: 'relative',
-    top: 0,
     left: 0,
+    right: 0,
+    bottom: 0,
   },
   trackProgress: {
     position: 'absolute',
     top: 0,
     left: 0,
-    height: TRACK_HEIGHT,
   },
-  stepContainer: {
+  stepContainerStyle: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: STEP_CARD_WIDTH,
-    height: CONTAINER_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
   },
   stepLabel: {
-    position: 'relative',
-    bottom: 12,
+    position: 'absolute',
+    top: -10,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
     color: 'black',
   },
   stepLabelActive: {
@@ -154,19 +180,6 @@ const styles = StyleSheet.create({
   stepCardText: {
     color: 'white',
     fontWeight: 'bold',
-  },
-  step: {
-    width: STEP_CARD_WIDTH,
-    height: STEP_CARD_WIDTH,
-    borderRadius: STEP_CARD_WIDTH / 2,
-    bottom: 8,
-    borderWidth: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'white',
-  },
-  stepActive: {
-    backgroundColor: 'red',
   },
 });
 

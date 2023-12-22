@@ -9,7 +9,10 @@ export type ProgressStepperContextProviderProps = {
   initialPosition?: number;
   animationDuration?: number;
   animationDelay?: number;
-  stepBoxStyle?: ViewStyle;
+  stepStyle?: ViewStyle;
+  trackHeight?: number;
+  containerHeight?: number;
+  stepWidth?: number;
   activeColor?: string;
   inactiveColor?: string;
   showLabels?: boolean;
@@ -30,11 +33,20 @@ const windowWidth = Dimensions.get('window').width;
 export default function ProgressStepperContextProvider({
   children,
   width = windowWidth,
-  steps = ['Step 1', 'Step 2', 'Step 3'],
+  steps = ['Menu', 'Cart', 'Checkout'],
   initialPosition = 0,
   animationDuration = 300,
   animationDelay = 700,
-  stepBoxStyle = {},
+  trackHeight = 6,
+  containerHeight = 60,
+  stepWidth = 60,
+  stepStyle = {
+    width: stepWidth - 20,
+    height: stepWidth - 20,
+    borderRadius: stepWidth / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   showLabels = true,
   activeColor = '#FF0000',
   inactiveColor = '#DEDEDE',
@@ -59,10 +71,13 @@ export default function ProgressStepperContextProvider({
         initialPosition,
         animationDuration,
         animationDelay,
-        stepBoxStyle,
+        stepStyle,
         showLabels,
         activeColor,
         inactiveColor,
+        trackHeight,
+        containerHeight,
+        stepWidth,
       }}
     >
       {children}
