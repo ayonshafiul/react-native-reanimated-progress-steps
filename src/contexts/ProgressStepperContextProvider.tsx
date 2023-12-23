@@ -24,14 +24,16 @@ export type ProgressStepperContextProviderProps = {
   innerLabelStyle?: TextStyle;
 };
 
-export type ProgressStepperContextValue = {
-  currentPosition: number;
-  goToNext: () => void;
-  goToPrevious: () => void;
-} & Required<Omit<ProgressStepperContextProviderProps, 'children'>>;
+export type ProgressStepperContextValue =
+  | ({
+      currentPosition: number;
+      goToNext: () => void;
+      goToPrevious: () => void;
+    } & Required<Omit<ProgressStepperContextProviderProps, 'children'>>)
+  | null;
 
 export const ProgressStepperContext =
-  createContext<ProgressStepperContextValue>({} as ProgressStepperContextValue);
+  createContext<ProgressStepperContextValue>(null);
 
 const windowWidth = Dimensions.get('window').width;
 // const windowHeight = Dimensions.get('window').height;

@@ -2,5 +2,11 @@ import { useContext } from 'react';
 import { ProgressStepperContext } from '../contexts/ProgressStepperContextProvider';
 
 export default function useProgressStepperContext() {
-  return useContext(ProgressStepperContext);
+  const context = useContext(ProgressStepperContext);
+  if (!context) {
+    throw new Error(
+      'Progress Stepper must be wrapped inside a ProgressStepperContextProvider.'
+    );
+  }
+  return context;
 }

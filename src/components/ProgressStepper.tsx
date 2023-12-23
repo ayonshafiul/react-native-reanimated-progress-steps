@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import useProgressStepperContext from '../hooks/useProgressStepperContext';
 
-const ProgressStepperMultiPage = ({}) => {
+const ProgressStepper = ({}) => {
   const {
     currentPosition,
     width,
@@ -179,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(ProgressStepperMultiPage);
+export default memo(ProgressStepper);

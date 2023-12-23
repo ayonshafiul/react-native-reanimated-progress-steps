@@ -4,15 +4,17 @@ import { Button, StyleSheet, View } from 'react-native';
 
 import {
   ProgressStepperContextProvider,
-  ProgressStepperMultiPage,
+  ProgressStepper,
   useProgressStepperContext,
 } from 'react-native-reanimated-progress-steps';
 
 export default function App() {
   return (
-    <ProgressStepperContextProvider>
-      <ProgressStepperExample />
-    </ProgressStepperContextProvider>
+    <>
+      <ProgressStepperContextProvider>
+        <ProgressStepperExample />
+      </ProgressStepperContextProvider>
+    </>
   );
 }
 
@@ -21,7 +23,7 @@ const ProgressStepperExample = () => {
   const [count, setCount] = useState(0);
   return (
     <View style={styles.container}>
-      <ProgressStepperMultiPage />
+      <ProgressStepper />
       <Button title="Previous" onPress={goToPrevious} />
       <Button title="Next" onPress={goToNext} />
       <Button title={`${count}`} onPress={() => setCount((p) => p + 1)} />
