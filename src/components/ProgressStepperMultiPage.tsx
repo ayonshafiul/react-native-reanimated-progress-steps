@@ -11,7 +11,6 @@ import Animated, {
 import useProgressStepperContext from '../hooks/useProgressStepperContext';
 
 const ProgressStepperMultiPage = ({}) => {
-  // need one extra steps
   const {
     currentPosition,
     width,
@@ -25,9 +24,14 @@ const ProgressStepperMultiPage = ({}) => {
     trackHeight,
     containerHeight,
     stepWidth,
+    trackActiveColor,
+    trackInactiveColor,
+    labelOffset,
+    labelStyle,
+    innerLabelStyle,
   } = useProgressStepperContext();
-  const progress_steps = steps.length + 1;
 
+  const progress_steps = steps.length + 1;
   const perStepWidth = width / progress_steps;
   const progress = useSharedValue(perStepWidth * currentPosition);
   const colorChange = useSharedValue(0);
@@ -45,7 +49,6 @@ const ProgressStepperMultiPage = ({}) => {
 
   useEffect(() => {
     animateProgress(currentPosition);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPosition]);
 
@@ -58,6 +61,13 @@ const ProgressStepperMultiPage = ({}) => {
   };
   const inactiveBgStyle = {
     backgroundColor: inactiveColor,
+  };
+
+  const activeTrackStyle = {
+    backgroundColor: trackActiveColor,
+  };
+  const inactiveTrackStyle = {
+    backgroundColor: trackInactiveColor,
   };
 
   const containerHeightStyle = {
@@ -81,14 +91,14 @@ const ProgressStepperMultiPage = ({}) => {
   };
 
   return (
-    <View style={[styles.container, containerHeightStyle]}>
+    <View style={[styles.container, containerHeightStyle, stepWrapperStyle]}>
       <View
         style={[
           styles.trackContainer,
           { width: width },
           trackHeightStyle,
           trackContainerPositionStyle,
-          inactiveBgStyle,
+          inactiveTrackStyle,
         ]}
       >
         <Animated.View
@@ -96,7 +106,7 @@ const ProgressStepperMultiPage = ({}) => {
             styles.trackProgress,
             trackHeightStyle,
             trackProgressAnimated,
-            activeBgStyle,
+            activeTrackStyle,
           ]}
         />
       </View>
@@ -115,12 +125,7 @@ const ProgressStepperMultiPage = ({}) => {
               ]}
             >
               {showLabels && (
-                <Text
-                  style={[
-                    styles.stepLabel,
-                    currentPosition > index ? styles.stepLabelActive : null,
-                  ]}
-                >
+                <Text style={[styles.label, labelStyle, { top: labelOffset }]}>
                   {label}
                 </Text>
               )}
@@ -130,7 +135,7 @@ const ProgressStepperMultiPage = ({}) => {
                   currentPosition > index ? activeBgStyle : inactiveBgStyle,
                 ]}
               >
-                <Text style={styles.stepCardText}>{index + 1}</Text>
+                <Text style={innerLabelStyle}>{index + 1}</Text>
               </Animated.View>
             </View>
           );
@@ -166,20 +171,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  stepLabel: {
+  label: {
     position: 'absolute',
-    top: -10,
     left: 0,
     right: 0,
     textAlign: 'center',
-    color: 'black',
-  },
-  stepLabelActive: {
-    color: 'black',
-  },
-  stepCardText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });
 

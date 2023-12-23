@@ -1,4 +1,5 @@
 import React, { useState, createContext } from 'react';
+import type { TextStyle } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { Dimensions } from 'react-native';
 
@@ -16,6 +17,11 @@ export type ProgressStepperContextProviderProps = {
   activeColor?: string;
   inactiveColor?: string;
   showLabels?: boolean;
+  trackActiveColor?: string;
+  trackInactiveColor?: string;
+  labelOffset?: number;
+  labelStyle?: TextStyle;
+  innerLabelStyle?: TextStyle;
 };
 
 export type ProgressStepperContextValue = {
@@ -41,15 +47,25 @@ export default function ProgressStepperContextProvider({
   containerHeight = 60,
   stepWidth = 60,
   stepStyle = {
-    width: stepWidth - 20,
-    height: stepWidth - 20,
-    borderRadius: stepWidth / 2,
+    width: 35,
+    height: 35,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
   showLabels = true,
   activeColor = '#FF0000',
   inactiveColor = '#DEDEDE',
+  trackActiveColor = activeColor,
+  trackInactiveColor = inactiveColor,
+  labelOffset = -15,
+  labelStyle = {
+    color: 'black',
+  },
+  innerLabelStyle = {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 }: ProgressStepperContextProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
@@ -78,6 +94,11 @@ export default function ProgressStepperContextProvider({
         trackHeight,
         containerHeight,
         stepWidth,
+        trackActiveColor,
+        trackInactiveColor,
+        labelOffset,
+        labelStyle,
+        innerLabelStyle,
       }}
     >
       {children}
