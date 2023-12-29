@@ -26,25 +26,6 @@ const ProgressStepper = ({}) => {
     perStepWidth,
   } = useProgressStepperContext();
 
-  // const progress_steps = steps.length + 1;
-  // const perStepWidth = width / progress_steps;
-  // const progress = useSharedValue(perStepWidth * currentPosition);
-
-  // const animateProgress = (position: number) => {
-  //   const widthValueForStep = perStepWidth * position;
-  //   progress.value = withDelay(
-  //     animationDelay,
-  //     withTiming(widthValueForStep, {
-  //       duration: animationDuration,
-  //     })
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   animateProgress(currentPosition);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentPosition]);
-
   const trackProgressStyle = useAnimatedStyle(() => ({
     width: progress.value,
   }));
