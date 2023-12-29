@@ -10,10 +10,10 @@ export type ProgressStepperContextProviderProps = {
   initialPosition?: number;
   animationDuration?: number;
   animationDelay?: number;
+  stepWidth?: number;
   stepStyle?: ViewStyle;
   trackHeight?: number;
   containerHeight?: number;
-  stepWidth?: number;
   activeColor?: string;
   inactiveColor?: string;
   showLabels?: boolean;
@@ -73,10 +73,22 @@ export default function ProgressStepperContextProvider({
     useState<number>(initialPosition);
 
   const goToNext = () => {
-    setCurrentPosition((prevPosition) => prevPosition + 1);
+    setCurrentPosition((prevPosition) => {
+      if (prevPosition + 1 <= steps.length + 1) {
+        return prevPosition + 1;
+      } else {
+        return prevPosition;
+      }
+    });
   };
   const goToPrevious = () => {
-    setCurrentPosition((prevPosition) => prevPosition - 1);
+    setCurrentPosition((prevPosition) => {
+      if (prevPosition - 1 >= 0) {
+        return prevPosition - 1;
+      } else {
+        return prevPosition;
+      }
+    });
   };
   return (
     <ProgressStepperContext.Provider
