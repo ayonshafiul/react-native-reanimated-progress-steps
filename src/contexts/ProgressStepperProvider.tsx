@@ -77,7 +77,9 @@ export default function ProgressStepperProvider({
   trackInactiveColor = inactiveColor,
   labelOffset = -15,
   labelStyle = {
-    color: 'red',
+    color: 'black',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   innerLabelStyle = {
     color: 'white',
