@@ -28,6 +28,7 @@ export type ProgressStepperProviderProps = {
   labelOffset?: number;
   labelStyle?: TextStyle;
   innerLabelStyle?: TextStyle;
+  extended?: boolean;
 };
 
 export type ProgressStepperContextValue =
@@ -49,7 +50,7 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function ProgressStepperProvider({
   children,
-  width = windowWidth,
+  width = windowWidth - 100,
   steps = ['Menu', 'Cart', 'Checkout'],
   initialPosition = 0,
   animationDuration = 300,
@@ -76,7 +77,7 @@ export default function ProgressStepperProvider({
   trackInactiveColor = inactiveColor,
   labelOffset = -15,
   labelStyle = {
-    color: 'black',
+    color: 'red',
   },
   innerLabelStyle = {
     color: 'white',
@@ -87,15 +88,17 @@ export default function ProgressStepperProvider({
       },
     ],
   },
+  extended = false,
 }: ProgressStepperProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
-  const progress_steps = steps.length + 1;
+  const progress_steps = extended ? steps.length + 1 : steps.length - 1;
   const perStepWidth = width / progress_steps;
   const progress = useSharedValue<number>(perStepWidth * currentPosition);
 
   const animateProgress = (position: number) => {
-    const widthValueForStep = perStepWidth * position;
+    const widthValueForStep =
+      perStepWidth * (extended ? position : position - 1);
     progress.value = withDelay(
       animationDelay,
       withTiming(widthValueForStep, {
@@ -111,7 +114,7 @@ export default function ProgressStepperProvider({
 
   const goToNext = () => {
     setCurrentPosition((prevPosition) => {
-      if (prevPosition + 1 <= steps.length + 1) {
+      if (prevPosition + 1 <= (extended ? steps.length + 1 : steps.length)) {
         return prevPosition + 1;
       } else {
         return prevPosition;
@@ -154,6 +157,7 @@ export default function ProgressStepperProvider({
         innerLabelStyle,
         progress,
         perStepWidth,
+        extended,
       }}
     >
       {children}

@@ -24,6 +24,7 @@ const ProgressStepper = ({}) => {
     innerLabelStyle,
     progress,
     perStepWidth,
+    extended,
   } = useProgressStepperContext();
 
   const trackProgressStyle = useAnimatedStyle(() => ({
@@ -95,7 +96,11 @@ const ProgressStepper = ({}) => {
                 styles.stepContainerStyle,
                 stepWidthStyle,
                 containerHeightStyle,
-                { left: perStepWidth * (index + 1) - stepWidth / 2 },
+                {
+                  left:
+                    perStepWidth * (extended ? index + 1 : index) -
+                    stepWidth / 2,
+                },
               ]}
             >
               {showLabels && (
@@ -125,7 +130,6 @@ const styles = StyleSheet.create({
   },
   trackContainer: {
     position: 'absolute',
-    left: 0,
   },
   stepWrapper: {
     position: 'relative',
