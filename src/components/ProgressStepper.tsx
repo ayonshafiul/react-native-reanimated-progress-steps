@@ -1,13 +1,8 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import useProgressStepperContext from '../hooks/useProgressStepperContext';
 
 const ProgressStepper = ({}) => {
@@ -15,8 +10,6 @@ const ProgressStepper = ({}) => {
     currentPosition,
     width,
     steps,
-    animationDelay,
-    animationDuration,
     stepStyle,
     showLabels,
     activeColor,
@@ -29,30 +22,30 @@ const ProgressStepper = ({}) => {
     labelOffset,
     labelStyle,
     innerLabelStyle,
+    progress,
+    perStepWidth,
   } = useProgressStepperContext();
 
-  const progress_steps = steps.length + 1;
-  const perStepWidth = width / progress_steps;
-  const progress = useSharedValue(perStepWidth * currentPosition);
-  const colorChange = useSharedValue(0);
+  // const progress_steps = steps.length + 1;
+  // const perStepWidth = width / progress_steps;
+  // const progress = useSharedValue(perStepWidth * currentPosition);
 
-  const animateProgress = (position: number) => {
-    colorChange.value = 0;
-    const widthValueForStep = perStepWidth * position;
-    progress.value = withDelay(
-      animationDelay,
-      withTiming(widthValueForStep, {
-        duration: animationDuration,
-      })
-    );
-  };
+  // const animateProgress = (position: number) => {
+  //   const widthValueForStep = perStepWidth * position;
+  //   progress.value = withDelay(
+  //     animationDelay,
+  //     withTiming(widthValueForStep, {
+  //       duration: animationDuration,
+  //     })
+  //   );
+  // };
 
-  useEffect(() => {
-    animateProgress(currentPosition);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPosition]);
+  // useEffect(() => {
+  //   animateProgress(currentPosition);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentPosition]);
 
-  const trackProgressAnimated = useAnimatedStyle(() => ({
+  const trackProgressStyle = useAnimatedStyle(() => ({
     width: progress.value,
   }));
 
@@ -105,7 +98,7 @@ const ProgressStepper = ({}) => {
           style={[
             styles.trackProgress,
             trackHeightStyle,
-            trackProgressAnimated,
+            trackProgressStyle,
             activeTrackStyle,
           ]}
         />

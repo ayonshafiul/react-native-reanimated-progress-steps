@@ -1,7 +1,13 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import type { TextStyle } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { Dimensions } from 'react-native';
+import {
+  useSharedValue,
+  withDelay,
+  withTiming,
+  type SharedValue,
+} from 'react-native-reanimated';
 
 export type ProgressStepperContextProviderProps = {
   children: React.ReactNode;
@@ -29,6 +35,8 @@ export type ProgressStepperContextValue =
       currentPosition: number;
       goToNext: () => void;
       goToPrevious: () => void;
+      progress: SharedValue<number>;
+      perStepWidth: number;
     } & Required<Omit<ProgressStepperContextProviderProps, 'children'>>)
   | null;
 
@@ -49,9 +57,14 @@ export default function ProgressStepperContextProvider({
   containerHeight = 60,
   stepWidth = 60,
   stepStyle = {
-    width: 35,
-    height: 35,
-    borderRadius: 18,
+    width: 30,
+    height: 30,
+    transform: [
+      {
+        rotate: '45deg',
+      },
+    ],
+    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -67,10 +80,33 @@ export default function ProgressStepperContextProvider({
   innerLabelStyle = {
     color: 'white',
     fontWeight: 'bold',
+    transform: [
+      {
+        rotate: '-45deg',
+      },
+    ],
   },
 }: ProgressStepperContextProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
+  const progress_steps = steps.length + 1;
+  const perStepWidth = width / progress_steps;
+  const progress = useSharedValue<number>(perStepWidth * currentPosition);
+
+  const animateProgress = (position: number) => {
+    const widthValueForStep = perStepWidth * position;
+    progress.value = withDelay(
+      animationDelay,
+      withTiming(widthValueForStep, {
+        duration: animationDuration,
+      })
+    );
+  };
+
+  useEffect(() => {
+    animateProgress(currentPosition);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPosition]);
 
   const goToNext = () => {
     setCurrentPosition((prevPosition) => {
@@ -90,6 +126,7 @@ export default function ProgressStepperContextProvider({
       }
     });
   };
+
   return (
     <ProgressStepperContext.Provider
       value={{
@@ -113,6 +150,8 @@ export default function ProgressStepperContextProvider({
         labelOffset,
         labelStyle,
         innerLabelStyle,
+        progress,
+        perStepWidth,
       }}
     >
       {children}
