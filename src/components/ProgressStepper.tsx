@@ -25,6 +25,7 @@ const ProgressStepper = ({}) => {
     progress,
     perStepWidth,
     extended,
+    renderInnerStep,
   } = useProgressStepperContext();
 
   const trackProgressStyle = useAnimatedStyle(() => ({
@@ -114,7 +115,11 @@ const ProgressStepper = ({}) => {
                   currentPosition > index ? activeBgStyle : inactiveBgStyle,
                 ]}
               >
-                <Text style={innerLabelStyle}>{index + 1}</Text>
+                {typeof renderInnerStep === 'function' ? (
+                  renderInnerStep(label, index + 1)
+                ) : (
+                  <Text style={innerLabelStyle}>{index + 1}</Text>
+                )}
               </Animated.View>
             </View>
           );

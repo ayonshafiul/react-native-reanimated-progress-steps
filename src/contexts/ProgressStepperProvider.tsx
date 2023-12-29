@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import type { TextStyle } from 'react-native';
 import type { ViewStyle } from 'react-native';
+
 import { Dimensions } from 'react-native';
 import {
   useSharedValue,
@@ -29,6 +30,9 @@ export type ProgressStepperProviderProps = {
   labelStyle?: TextStyle;
   innerLabelStyle?: TextStyle;
   extended?: boolean;
+  renderInnerStep?:
+    | ((stepLabel: string, stepNumber: number) => React.ReactNode)
+    | null;
 };
 
 export type ProgressStepperContextValue =
@@ -91,6 +95,7 @@ export default function ProgressStepperProvider({
     ],
   },
   extended = false,
+  renderInnerStep = null,
 }: ProgressStepperProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
@@ -160,6 +165,7 @@ export default function ProgressStepperProvider({
         progress,
         perStepWidth,
         extended,
+        renderInnerStep,
       }}
     >
       {children}
