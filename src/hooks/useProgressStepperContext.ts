@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ProgressStepperContext } from '../contexts/ProgressStepperContextProvider';
+import { ProgressStepperContext } from '../contexts/ProgressStepperProvider';
 
 export default function useProgressStepperContext() {
   const context = useContext(ProgressStepperContext);

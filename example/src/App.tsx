@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 
 import {
-  ProgressStepperContextProvider,
+  ProgressStepperProvider,
   ProgressStepper,
   useProgressStepperContext,
 } from 'react-native-reanimated-progress-steps';
@@ -11,9 +11,9 @@ import {
 export default function App() {
   return (
     <>
-      <ProgressStepperContextProvider>
+      <ProgressStepperProvider>
         <ProgressStepperExample />
-      </ProgressStepperContextProvider>
+      </ProgressStepperProvider>
     </>
   );
 }

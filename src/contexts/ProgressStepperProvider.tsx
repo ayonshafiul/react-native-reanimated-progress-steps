@@ -9,7 +9,7 @@ import {
   type SharedValue,
 } from 'react-native-reanimated';
 
-export type ProgressStepperContextProviderProps = {
+export type ProgressStepperProviderProps = {
   children: React.ReactNode;
   width?: number;
   steps?: string[];
@@ -33,11 +33,12 @@ export type ProgressStepperContextProviderProps = {
 export type ProgressStepperContextValue =
   | ({
       currentPosition: number;
+      setCurrentPosition: React.Dispatch<React.SetStateAction<number>>;
       goToNext: () => void;
       goToPrevious: () => void;
       progress: SharedValue<number>;
       perStepWidth: number;
-    } & Required<Omit<ProgressStepperContextProviderProps, 'children'>>)
+    } & Required<Omit<ProgressStepperProviderProps, 'children'>>)
   | null;
 
 export const ProgressStepperContext =
@@ -46,7 +47,7 @@ export const ProgressStepperContext =
 const windowWidth = Dimensions.get('window').width;
 // const windowHeight = Dimensions.get('window').height;
 
-export default function ProgressStepperContextProvider({
+export default function ProgressStepperProvider({
   children,
   width = windowWidth,
   steps = ['Menu', 'Cart', 'Checkout'],
@@ -86,7 +87,7 @@ export default function ProgressStepperContextProvider({
       },
     ],
   },
-}: ProgressStepperContextProviderProps) {
+}: ProgressStepperProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
   const progress_steps = steps.length + 1;
@@ -131,6 +132,7 @@ export default function ProgressStepperContextProvider({
     <ProgressStepperContext.Provider
       value={{
         currentPosition,
+        setCurrentPosition,
         goToNext,
         goToPrevious,
         steps,
