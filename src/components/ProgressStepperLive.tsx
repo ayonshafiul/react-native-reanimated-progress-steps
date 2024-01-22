@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Dimensions } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import Animated, {
   Extrapolation,
@@ -9,30 +10,31 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+const windowWidth = Dimensions.get('window').width;
+
 const ProgressStep = ({
   height = 8,
   completed = false,
   trackBackgroundColor = '#DEDEDE',
   progressColor = 'red',
-  trackCompletedColor = 'green',
-  containerWidth = 80,
+  trackCompletedColor = 'red',
+  stepWidth = 80,
   showLabel = true,
   label = '',
   active = false,
 }) => {
   const anim = useSharedValue(0);
-  console.log(completed);
 
   const styles = StyleSheet.create({
     container: {
-      width: containerWidth,
+      width: stepWidth,
       height,
       overflow: 'hidden',
       borderRadius: 4,
     },
     progressBar: {
       height,
-      width: containerWidth,
+      width: stepWidth,
       backgroundColor: trackBackgroundColor,
     },
     label: {
@@ -42,19 +44,29 @@ const ProgressStep = ({
   });
 
   useEffect(() => {
-    anim.value = withRepeat(withTiming(1, { duration: 1500 }), -1);
+    anim.value = withRepeat(withTiming(1, { duration: 2200 }), -1);
   }, [anim]);
 
   const animStyle = useAnimatedStyle(() => {
-    const scaleX = interpolate(anim.value, [0, 0.4, 1], [1, 0.35, 0.8], {
-      extrapolateLeft: Extrapolation.CLAMP,
-      extrapolateRight: Extrapolation.CLAMP,
-    });
+    const scaleX = interpolate(
+      anim.value,
+      [0, 0.3, 0.6, 1],
+      [1, 0.25, 0.3, 0.1],
+      {
+        extrapolateLeft: Extrapolation.CLAMP,
+        extrapolateRight: Extrapolation.CLAMP,
+      }
+    );
 
-    const translateX = interpolate(anim.value, [0, 0.5, 1], [-200, 0, 200], {
-      extrapolateLeft: Extrapolation.CLAMP,
-      extrapolateRight: Extrapolation.CLAMP,
-    });
+    const translateX = interpolate(
+      anim.value,
+      [0, 0.3, 0.6, 1],
+      [-200, 0, 50, 700],
+      {
+        extrapolateLeft: Extrapolation.CLAMP,
+        extrapolateRight: Extrapolation.CLAMP,
+      }
+    );
 
     return {
       transform: [{ scaleX: scaleX }, { translateX: translateX }],
@@ -92,16 +104,20 @@ const ProgressStep = ({
 
 export default function ProgressStepperLive({
   currentStep = 0,
-  allSteps = ['Menu', 'Cart', 'Checkout'],
+  allSteps = ['Menu', 'Cart', 'Checkout', 'Delivery'],
+  width = windowWidth - 20,
+  gap = 10,
+  containerStyle = {},
 }) {
+  const stepWidth = width / allSteps.length - gap;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle, { width }]}>
       {allSteps.map((step, index) => {
         return (
           <ProgressStep
             completed={currentStep > index}
             active={currentStep === index}
-            containerWidth={100}
+            stepWidth={stepWidth}
             label={step}
             showLabel={true}
             key={index}
@@ -115,8 +131,7 @@ export default function ProgressStepperLive({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
   },
 });
