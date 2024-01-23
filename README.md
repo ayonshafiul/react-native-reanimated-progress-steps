@@ -8,4 +8,4 @@ _Live progress tracking animated components for react native projects_
 <img src="https://raw.githubusercontent.com/ayonshafiul/react-native-reanimated-progress-steps-docs/main/static/img/demo.gif" width="250"/>
 </p>
 
-### Read more in the [Documentation](https://react-native-reanimated-progress-steps/docs/installation)
+### Read more in the [Documentation](https://react-native-reanimated-progress-steps.vercel.app/docs/installation)
