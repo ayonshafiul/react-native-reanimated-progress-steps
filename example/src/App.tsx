@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 
 import {
   ProgressStepperProvider,
@@ -26,7 +26,6 @@ const ProgressStepperLiveExample = () => {
   return (
     <View style={styles.container}>
       <ProgressStepperLive currentStep={current} />
-      <Text>{current}</Text>
       <Button title="Previous" onPress={() => setCurrent((p) => p - 1)} />
       <Button title="Next" onPress={() => setCurrent((p) => p + 1)} />
     </View>
