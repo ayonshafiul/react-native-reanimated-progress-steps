@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import type { TextStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { Dimensions } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import Animated, {
@@ -13,27 +15,28 @@ import Animated, {
 const windowWidth = Dimensions.get('window').width;
 
 const ProgressStep = ({
-  height = 8,
-  completed = false,
+  trackHeight = 8,
   trackBackgroundColor = '#DEDEDE',
+  completed = false,
   progressColor = 'red',
   trackCompletedColor = 'red',
   stepWidth = 80,
   showLabel = true,
   label = '',
   active = false,
+  labelStyle = {},
 }) => {
   const anim = useSharedValue(0);
 
   const styles = StyleSheet.create({
-    container: {
+    progressBarContainer: {
       width: stepWidth,
-      height,
+      height: trackHeight,
       overflow: 'hidden',
       borderRadius: 4,
     },
     progressBar: {
-      height,
+      height: trackHeight,
       width: stepWidth,
       backgroundColor: trackBackgroundColor,
     },
@@ -48,7 +51,7 @@ const ProgressStep = ({
   }, [anim]);
 
   const animStyle = useAnimatedStyle(() => {
-    const scaleX = interpolate(
+    const scaleHoldndGo = interpolate(
       anim.value,
       [0, 0.3, 0.6, 1],
       [1, 0.25, 0.3, 0.1],
@@ -58,7 +61,7 @@ const ProgressStep = ({
       }
     );
 
-    const translateX = interpolate(
+    const translateHoldndGo = interpolate(
       anim.value,
       [0, 0.3, 0.6, 1],
       [-200, 0, 50, 700],
@@ -69,15 +72,15 @@ const ProgressStep = ({
     );
 
     return {
-      transform: [{ scaleX: scaleX }, { translateX: translateX }],
+      transform: [{ scaleX: scaleHoldndGo }, { translateX: translateHoldndGo }],
     };
   });
 
   return (
-    <View style={{ height: showLabel ? 30 : 10 }}>
+    <View>
       <Animated.View
         style={[
-          styles.container,
+          styles.progressBarContainer,
           {
             backgroundColor: completed
               ? trackCompletedColor
@@ -97,21 +100,41 @@ const ProgressStep = ({
           />
         )}
       </Animated.View>
-      {showLabel && <Text style={styles.label}>{label}</Text>}
+      {showLabel && <Text style={[styles.label, labelStyle]}>{label}</Text>}
     </View>
   );
+};
+
+export type ProgressStepperLiveProps = {
+  currentStep: number;
+  allSteps: string[];
+  showLabels: boolean;
+  width: number;
+  stepGap: number;
+  containerStyle?: ViewStyle;
+  trackHeight: number;
+  trackBackgroundColor: string;
+  progressColor: string;
+  trackCompletedColor: string;
+  labelStyle: TextStyle;
 };
 
 export default function ProgressStepperLive({
   currentStep = 0,
   allSteps = ['Menu', 'Cart', 'Checkout', 'Delivery'],
+  showLabels = true,
   width = windowWidth - 20,
-  gap = 10,
+  stepGap = 10,
   containerStyle = {},
-}) {
-  const stepWidth = width / allSteps.length - gap;
+  trackHeight = 8,
+  trackBackgroundColor = '#DEDEDE',
+  progressColor = 'red',
+  trackCompletedColor = 'red',
+  labelStyle = {},
+}: ProgressStepperLiveProps) {
+  const stepWidth = width / allSteps.length - stepGap;
   return (
-    <View style={[styles.container, containerStyle, { width }]}>
+    <View style={[styles.container, { width }, containerStyle]}>
       {allSteps.map((step, index) => {
         return (
           <ProgressStep
@@ -119,8 +142,13 @@ export default function ProgressStepperLive({
             active={currentStep === index}
             stepWidth={stepWidth}
             label={step}
-            showLabel={true}
+            showLabel={showLabels}
             key={index}
+            trackCompletedColor={trackCompletedColor}
+            trackBackgroundColor={trackBackgroundColor}
+            trackHeight={trackHeight}
+            progressColor={progressColor}
+            labelStyle={labelStyle}
           />
         );
       })}
