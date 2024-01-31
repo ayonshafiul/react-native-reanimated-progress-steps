@@ -25,6 +25,8 @@ const ProgressStep = ({
   label = '',
   active = false,
   labelStyle = {},
+  animationVariation = 'live',
+  animationDuration = 1000,
 }) => {
   const anim = useSharedValue(0);
 
@@ -47,11 +49,11 @@ const ProgressStep = ({
   });
 
   useEffect(() => {
-    anim.value = withRepeat(withTiming(1, { duration: 2200 }), -1);
-  }, [anim]);
+    anim.value = withRepeat(withTiming(1, { duration: animationDuration }), -1);
+  }, [anim, animationDuration]);
 
   const animStyle = useAnimatedStyle(() => {
-    const scaleHoldndGo = interpolate(
+    const scaleLive = interpolate(
       anim.value,
       [0, 0.3, 0.6, 1],
       [1, 0.25, 0.3, 0.1],
@@ -61,7 +63,7 @@ const ProgressStep = ({
       }
     );
 
-    const translateHoldndGo = interpolate(
+    const translateLive = interpolate(
       anim.value,
       [0, 0.3, 0.6, 1],
       [-200, 0, 50, 700],
@@ -71,8 +73,26 @@ const ProgressStep = ({
       }
     );
 
+    const scaleXFill = interpolate(anim.value, [0, 1], [0, 1], {
+      extrapolateLeft: Extrapolation.CLAMP,
+      extrapolateRight: Extrapolation.CLAMP,
+    });
+
+    const opacityFill = interpolate(anim.value, [0, 1], [1, 0], {
+      extrapolateLeft: Extrapolation.CLAMP,
+      extrapolateRight: Extrapolation.CLAMP,
+    });
+
+    if (animationVariation === 'scaleToFill') {
+      return {
+        transform: [{ scaleX: scaleXFill }, { translateX: 0 }],
+        opacity: opacityFill,
+      };
+    }
+
     return {
-      transform: [{ scaleX: scaleHoldndGo }, { translateX: translateHoldndGo }],
+      transform: [{ scaleX: scaleLive }, { translateX: translateLive }],
+      opacity: 1,
     };
   });
 
@@ -111,12 +131,14 @@ export type ProgressStepperLiveProps = {
   showLabels: boolean;
   width: number;
   stepGap: number;
-  containerStyle?: ViewStyle;
+  containerStyle: ViewStyle;
   trackHeight: number;
   trackBackgroundColor: string;
   progressColor: string;
   trackCompletedColor: string;
   labelStyle: TextStyle;
+  animationVariation: 'scaleToFill' | 'live';
+  animationDuration: number;
 };
 
 export default function ProgressStepperLive({
@@ -131,7 +153,9 @@ export default function ProgressStepperLive({
   progressColor = 'red',
   trackCompletedColor = 'red',
   labelStyle = {},
-}: ProgressStepperLiveProps) {
+  animationVariation = 'scaleToFill',
+  animationDuration = 1000,
+}: Partial<ProgressStepperLiveProps>) {
   const stepWidth = width / allSteps.length - stepGap;
   return (
     <View style={[styles.container, { width }, containerStyle]}>
@@ -149,6 +173,8 @@ export default function ProgressStepperLive({
             trackHeight={trackHeight}
             progressColor={progressColor}
             labelStyle={labelStyle}
+            animationVariation={animationVariation}
+            animationDuration={animationDuration}
           />
         );
       })}
