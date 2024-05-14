@@ -26,6 +26,7 @@ const ProgressStepperVertical = ({}) => {
     perStepHeight,
     extended,
     renderInnerStep,
+    renderStep,
   } = useProgressStepperVerticalContext();
 
   const trackProgressStyle = useAnimatedStyle(() => ({
@@ -103,9 +104,17 @@ const ProgressStepperVertical = ({}) => {
               ]}
             >
               {showLabels && (
-                <Text style={[styles.label, labelStyle, { left: labelOffset }]}>
-                  {label}
-                </Text>
+                <View style={styles.absolute}>
+                  {typeof renderStep === 'function' ? (
+                    renderStep(label, index)
+                  ) : (
+                    <Text
+                      style={[styles.label, labelStyle, { left: labelOffset }]}
+                    >
+                      {label}
+                    </Text>
+                  )}
+                </View>
               )}
               <Animated.View
                 style={[
@@ -154,7 +163,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     textAlign: 'center',
     zIndex: 10,
-    left: 100,
+    top: -10,
+    backgroundColor: 'yellow',
+  },
+  absolute: {
+    position: 'absolute',
   },
 });
 

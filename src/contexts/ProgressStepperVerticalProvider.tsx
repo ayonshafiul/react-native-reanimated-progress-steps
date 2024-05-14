@@ -33,6 +33,7 @@ export type ProgressStepperVerticalProviderProps = {
   renderInnerStep?:
     | ((stepLabel: string, stepNumber: number) => React.ReactNode)
     | null;
+  renderStep?: ((stepLabel: string, index: number) => React.ReactNode) | null;
 };
 
 export type ProgressStepperVerticalContextValue =
@@ -69,13 +70,14 @@ export default function ProgressStepperVerticalProvider({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    backgroundColor: 'pink',
   },
   showLabels = true,
   activeColor = '#FF0000',
   inactiveColor = '#DEDEDE',
   trackActiveColor = activeColor,
   trackInactiveColor = inactiveColor,
-  labelOffset = 60,
+  labelOffset = 30,
   labelStyle = {
     color: 'black',
     fontSize: 12,
@@ -87,6 +89,7 @@ export default function ProgressStepperVerticalProvider({
   },
   extended = false,
   renderInnerStep = null,
+  renderStep = null,
 }: ProgressStepperVerticalProviderProps) {
   const [currentPosition, setCurrentPosition] =
     useState<number>(initialPosition);
@@ -157,6 +160,7 @@ export default function ProgressStepperVerticalProvider({
         perStepHeight,
         extended,
         renderInnerStep,
+        renderStep,
       }}
     >
       {children}

@@ -3,6 +3,8 @@ import {
   View,
   StyleSheet,
   Button,
+  Text,
+  ScrollView,
   // ScrollView,
   // Text,
   // Dimensions,
@@ -68,13 +70,14 @@ import {
 function ProgressStepperExample() {
   const { goToNext, goToPrevious } = useProgressStepperVerticalContext();
   return (
-    <View style={styles.container}>
-      <ProgressStepperVertical />
-      <View>
-        <Button title="Next" onPress={goToNext}></Button>
-        <Button title="Previous" onPress={goToPrevious}></Button>
+    <ScrollView>
+      <View style={styles.container}>
+        <ProgressStepperVertical />
       </View>
-    </View>
+
+      <Button title="Next" onPress={goToNext}></Button>
+      <Button title="Previous" onPress={goToPrevious}></Button>
+    </ScrollView>
   );
 }
 
@@ -83,7 +86,42 @@ function ProgressStepperExample() {
 function App() {
   return (
     <NavigationContainer>
-      <ProgressStepperVerticalProvider extended>
+      <ProgressStepperVerticalProvider
+        renderInnerStep={(label, stepNumber) => {
+          return (
+            <View>
+              <Text style={{ color: 'white' }}>{stepNumber}</Text>
+            </View>
+          );
+        }}
+        renderStep={(label) => {
+          return (
+            <View
+              style={{
+                left: 120,
+                width: 200,
+              }}
+            >
+              <Text
+                style={{
+                  color: 'black',
+                }}
+              >
+                {label}
+              </Text>
+              <Text
+                style={{
+                  color: 'black',
+                }}
+              >
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              </Text>
+            </View>
+          );
+        }}
+        height={500}
+        extended
+      >
         <ProgressStepperExample />
       </ProgressStepperVerticalProvider>
     </NavigationContainer>
@@ -93,11 +131,7 @@ function App() {
 export default App;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
+  container: {},
   containerRight: {
     backgroundColor: 'yellow',
     zIndex: 1,
