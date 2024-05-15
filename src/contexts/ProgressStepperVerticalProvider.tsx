@@ -9,11 +9,15 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
+export type Step = {
+  title: string;
+  description: string;
+};
 
 export type ProgressStepperVerticalProviderProps = {
   children: React.ReactNode;
   height?: number;
-  steps?: string[];
+  steps: Step[];
   initialPosition?: number;
   animationDuration?: number;
   animationDelay?: number;
@@ -26,14 +30,13 @@ export type ProgressStepperVerticalProviderProps = {
   showLabels?: boolean;
   trackActiveColor?: string;
   trackInactiveColor?: string;
-  labelOffset?: number;
-  labelStyle?: TextStyle;
+  titleContainerStyle?: ViewStyle;
+  titleStyle?: TextStyle;
+  descriptionStyle?: TextStyle;
   innerLabelStyle?: TextStyle;
   extended?: boolean;
-  renderInnerStep?:
-    | ((stepLabel: string, stepNumber: number) => React.ReactNode)
-    | null;
-  renderStep?: ((stepLabel: string, index: number) => React.ReactNode) | null;
+  renderInnerStep?: ((step: Step, index: number) => React.ReactNode) | null;
+  renderStep?: ((step: Step, index: number) => React.ReactNode) | null;
 };
 
 export type ProgressStepperVerticalContextValue =
@@ -56,7 +59,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function ProgressStepperVerticalProvider({
   children,
   height = windowHeight,
-  steps = ['Menu', 'Cart', 'Checkout'],
+  steps = [],
   initialPosition = 0,
   animationDuration = 300,
   animationDelay = 700,
@@ -70,19 +73,22 @@ export default function ProgressStepperVerticalProvider({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: 'pink',
   },
   showLabels = true,
   activeColor = '#FF0000',
   inactiveColor = '#DEDEDE',
   trackActiveColor = activeColor,
   trackInactiveColor = inactiveColor,
-  labelOffset = 30,
-  labelStyle = {
+  titleContainerStyle = {
+    left: 50,
+    minWidth: 200,
+  },
+  titleStyle = {
     color: 'black',
     fontSize: 12,
     fontWeight: 'bold',
   },
+  descriptionStyle = {},
   innerLabelStyle = {
     color: 'white',
     fontWeight: 'bold',
@@ -153,8 +159,9 @@ export default function ProgressStepperVerticalProvider({
         stepHeight,
         trackActiveColor,
         trackInactiveColor,
-        labelOffset,
-        labelStyle,
+        titleContainerStyle,
+        titleStyle,
+        descriptionStyle,
         innerLabelStyle,
         progress,
         perStepHeight,

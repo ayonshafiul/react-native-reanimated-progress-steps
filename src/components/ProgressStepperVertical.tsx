@@ -19,8 +19,9 @@ const ProgressStepperVertical = ({}) => {
     stepHeight,
     trackActiveColor,
     trackInactiveColor,
-    labelOffset,
-    labelStyle,
+    titleContainerStyle,
+    titleStyle,
+    descriptionStyle,
     innerLabelStyle,
     progress,
     perStepHeight,
@@ -88,7 +89,7 @@ const ProgressStepperVertical = ({}) => {
         />
       </View>
       <View style={[styles.stepWrapper, containerWidthStyle, stepWrapperStyle]}>
-        {steps.map((label, index) => {
+        {steps.map((step, index) => {
           return (
             <View
               key={index}
@@ -104,15 +105,18 @@ const ProgressStepperVertical = ({}) => {
               ]}
             >
               {showLabels && (
-                <View style={styles.absolute}>
+                <View style={[styles.absolute, titleContainerStyle]}>
                   {typeof renderStep === 'function' ? (
-                    renderStep(label, index)
+                    renderStep(step, index)
                   ) : (
-                    <Text
-                      style={[styles.label, labelStyle, { left: labelOffset }]}
-                    >
-                      {label}
-                    </Text>
+                    <>
+                      <Text style={[styles.label, titleStyle]}>
+                        {step.title}
+                      </Text>
+                      <Text style={[styles.description, descriptionStyle]}>
+                        {step.description}
+                      </Text>
+                    </>
                   )}
                 </View>
               )}
@@ -123,7 +127,7 @@ const ProgressStepperVertical = ({}) => {
                 ]}
               >
                 {typeof renderInnerStep === 'function' ? (
-                  renderInnerStep(label, index + 1)
+                  renderInnerStep(step, index)
                 ) : (
                   <Text style={innerLabelStyle}>{index + 1}</Text>
                 )}
@@ -159,13 +163,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  label: {
-    position: 'absolute',
-    textAlign: 'center',
-    zIndex: 10,
-    top: -10,
-    backgroundColor: 'yellow',
-  },
+  label: {},
+  description: {},
   absolute: {
     position: 'absolute',
   },

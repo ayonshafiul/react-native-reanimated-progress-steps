@@ -72,8 +72,8 @@ function ProgressStepperExample() {
     <ScrollView>
       <ProgressStepperVertical />
       <View style={styles.btnContainer}>
-        <Button title="Next" onPress={goToNext}></Button>
-        <Button title="Previous" onPress={goToPrevious}></Button>
+        <Button title="Next" onPress={goToNext} />
+        <Button title="Previous" onPress={goToPrevious} />
       </View>
     </ScrollView>
   );
