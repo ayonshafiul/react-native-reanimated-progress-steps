@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Button,
-  Text,
   ScrollView,
   // ScrollView,
   // Text,
@@ -71,12 +70,11 @@ function ProgressStepperExample() {
   const { goToNext, goToPrevious } = useProgressStepperVerticalContext();
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <ProgressStepperVertical />
+      <ProgressStepperVertical />
+      <View style={styles.btnContainer}>
+        <Button title="Next" onPress={goToNext}></Button>
+        <Button title="Previous" onPress={goToPrevious}></Button>
       </View>
-
-      <Button title="Next" onPress={goToNext}></Button>
-      <Button title="Previous" onPress={goToPrevious}></Button>
     </ScrollView>
   );
 }
@@ -84,44 +82,24 @@ function ProgressStepperExample() {
 // const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
+  const STEPS = [
+    { title: 'Order Recieved', description: 'Your order is ready ' },
+    {
+      title: 'Processing',
+      description: 'Your order is being processed ',
+    },
+    {
+      title: 'Out for Delivery',
+      description: 'Our Delivery Van is on the way to you.',
+    },
+    {
+      title: 'Note from Delivery Man',
+      description: 'Customer er meye parcel niye palaise.',
+    },
+  ];
   return (
     <NavigationContainer>
-      <ProgressStepperVerticalProvider
-        renderInnerStep={(label, stepNumber) => {
-          return (
-            <View>
-              <Text style={{ color: 'white' }}>{stepNumber}</Text>
-            </View>
-          );
-        }}
-        renderStep={(label) => {
-          return (
-            <View
-              style={{
-                left: 120,
-                width: 200,
-              }}
-            >
-              <Text
-                style={{
-                  color: 'black',
-                }}
-              >
-                {label}
-              </Text>
-              <Text
-                style={{
-                  color: 'black',
-                }}
-              >
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              </Text>
-            </View>
-          );
-        }}
-        height={500}
-        extended
-      >
+      <ProgressStepperVerticalProvider height={700} extended steps={STEPS}>
         <ProgressStepperExample />
       </ProgressStepperVerticalProvider>
     </NavigationContainer>
@@ -135,5 +113,8 @@ const styles = StyleSheet.create({
   containerRight: {
     backgroundColor: 'yellow',
     zIndex: 1,
+  },
+  btnContainer: {
+    marginVertical: 2,
   },
 });
