@@ -16,14 +16,14 @@ _Live progress tracking animated components for react native projects_
 
 <p style={{textAlign: "center"}}>
 
-### Vertical
+### [Vertical](https://react-native-reanimated-progress-steps.vercel.app/docs/components/progress_stepper_vertical)
 
 <img src="https://raw.githubusercontent.com/ayonshafiul/react-native-reanimated-progress-steps-docs/main/static/img/vertical.gif" width="250"/>
 </p>
 
 <p style="align:center">
 
-### Horizontal
+### [Horizontal](https://react-native-reanimated-progress-steps.vercel.app/docs/components/progress_stepper)
 
 <img src="https://raw.githubusercontent.com/ayonshafiul/react-native-reanimated-progress-steps-docs/main/static/img/progress_stepper.gif" width="250"/>
 
@@ -31,7 +31,7 @@ _Live progress tracking animated components for react native projects_
 
 <p style={{textAlign: "center"}}>
 
-### Live Tracking
+### [Live Tracking](https://react-native-reanimated-progress-steps.vercel.app/docs/components/progress_stepper_live)
 
 <img src="https://raw.githubusercontent.com/ayonshafiul/react-native-reanimated-progress-steps-docs/main/static/img/progress_stepper_live.gif" width="250"/>
 </p>
