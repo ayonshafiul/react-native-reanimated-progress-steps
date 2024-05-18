@@ -101,7 +101,7 @@ export default function ProgressStepperVerticalProvider({
     useState<number>(initialPosition);
   const progress_steps = extended ? steps.length + 1 : steps.length - 1;
   const perStepHeight = height / progress_steps;
-  const progress = useSharedValue<number>(perStepHeight * currentPosition);
+  const progress = useSharedValue<number>(0);
 
   const animateProgress = (position: number) => {
     const widthValueForStep =

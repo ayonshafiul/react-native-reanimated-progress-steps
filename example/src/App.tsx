@@ -4,11 +4,14 @@ import {
   StyleSheet,
   Button,
   ScrollView,
+  SafeAreaView,
+  Text,
+  Image,
   // ScrollView,
   // Text,
   // Dimensions,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+// import { NavigationContainer } from '@react-navigation/native';
 // import {
 //   // createNativeStackNavigator,
 //   type NativeStackScreenProps,
@@ -70,7 +73,9 @@ function ProgressStepperExample() {
   const { goToNext, goToPrevious } = useProgressStepperVerticalContext();
   return (
     <ScrollView>
-      <ProgressStepperVertical />
+      <View style={styles.container}>
+        <ProgressStepperVertical />
+      </View>
       <View style={styles.btnContainer}>
         <Button title="Next" onPress={goToNext} />
         <Button title="Previous" onPress={goToPrevious} />
@@ -98,23 +103,63 @@ function App() {
     },
   ];
   return (
-    <NavigationContainer>
-      <ProgressStepperVerticalProvider height={700} extended steps={STEPS}>
+    <SafeAreaView>
+      <ProgressStepperVerticalProvider
+        height={500}
+        steps={STEPS}
+        initialPosition={1}
+        extended
+        renderStep={(step, _) => {
+          return (
+            <View style={styles.stepContainer}>
+              <Text style={styles.stepTitle}>{step.title}</Text>
+              <Text style={styles.setpDescription}>{step.description}</Text>
+            </View>
+          );
+        }}
+        renderInnerStep={() => {
+          return (
+            <Image source={require('../assets/box.png')} style={styles.image} />
+          );
+        }}
+        activeColor="#E44949"
+        trackActiveColor="#E44949"
+        trackWidth={3}
+      >
         <ProgressStepperExample />
       </ProgressStepperVerticalProvider>
-    </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
 export default App;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginVertical: 64,
+  },
   containerRight: {
     backgroundColor: 'yellow',
     zIndex: 1,
   },
   btnContainer: {
-    marginVertical: 2,
+    marginVertical: 8,
+  },
+  stepContainer: {
+    width: 300,
+  },
+  stepTitle: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+  },
+  setpDescription: {
+    left: 10,
+    color: 'grey',
+    fontSize: 12,
+  },
+  image: {
+    width: 16,
+    height: 16,
   },
 });
