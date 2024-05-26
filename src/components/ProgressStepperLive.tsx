@@ -4,6 +4,7 @@ import type { ViewStyle } from 'react-native';
 import { Dimensions } from 'react-native';
 import { StyleSheet, View, Text } from 'react-native';
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   useAnimatedStyle,
@@ -49,8 +50,18 @@ const ProgressStep = ({
   });
 
   useEffect(() => {
-    anim.value = withRepeat(withTiming(1, { duration: animationDuration }), -1);
-  }, [anim, animationDuration]);
+    anim.value = withRepeat(
+      withTiming(1, {
+        duration: animationDuration,
+        easing:
+          animationVariation === 'bounce'
+            ? Easing.inOut(Easing.circle)
+            : Easing.linear,
+      }),
+      -1,
+      animationVariation === 'bounce' ? true : false
+    );
+  }, [anim, animationDuration, animationVariation]);
 
   const animStyle = useAnimatedStyle(() => {
     const scaleLive = interpolate(
@@ -83,10 +94,27 @@ const ProgressStep = ({
       extrapolateRight: Extrapolation.CLAMP,
     });
 
+    const translateBounce = interpolate(
+      anim.value,
+      [0, 1],
+      [0, stepWidth - 20],
+      {
+        extrapolateLeft: Extrapolation.CLAMP,
+        extrapolateRight: Extrapolation.CLAMP,
+      }
+    );
+
     if (animationVariation === 'scaleToFill') {
       return {
         transform: [{ scaleX: scaleXFill }, { translateX: 0 }],
         opacity: opacityFill,
+      };
+    }
+
+    if (animationVariation === 'bounce') {
+      return {
+        transform: [{ translateX: translateBounce }],
+        width: 20,
       };
     }
 
@@ -137,7 +165,7 @@ export type ProgressStepperLiveProps = {
   progressColor: string;
   trackCompletedColor: string;
   labelStyle: TextStyle;
-  animationVariation: 'scaleToFill' | 'live';
+  animationVariation: 'scaleToFill' | 'live' | 'bounce';
   animationDuration: number;
 };
 

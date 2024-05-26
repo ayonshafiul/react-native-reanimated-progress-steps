@@ -2,8 +2,8 @@ import React from 'react';
 import {
   View,
   StyleSheet,
-  Button,
-  ScrollView,
+  // Button,
+  // ScrollView,
   SafeAreaView,
   Text,
   Image,
@@ -17,10 +17,11 @@ import {
 //   type NativeStackScreenProps,
 // } from '@react-navigation/native-stack';
 import {
-  ProgressStepperVertical,
+  ProgressStepperLive,
+  // ProgressStepperVertical,
   ProgressStepperVerticalProvider,
   // ProgressStepper,
-  useProgressStepperVerticalContext,
+  // useProgressStepperVerticalContext,
 } from 'react-native-reanimated-progress-steps';
 // import useFocusedPosition from './useFocusedPosition';
 
@@ -69,20 +70,20 @@ import {
 //   );
 // }
 
-function ProgressStepperExample() {
-  const { goToNext, goToPrevious } = useProgressStepperVerticalContext();
-  return (
-    <ScrollView>
-      <View style={styles.container}>
-        <ProgressStepperVertical />
-      </View>
-      <View style={styles.btnContainer}>
-        <Button title="Next" onPress={goToNext} />
-        <Button title="Previous" onPress={goToPrevious} />
-      </View>
-    </ScrollView>
-  );
-}
+// function ProgressStepperExample() {
+//   const { goToNext, goToPrevious } = useProgressStepperVerticalContext();
+//   return (
+//     <ScrollView>
+//       <View style={styles.container}>
+//         <ProgressStepperVertical />
+//       </View>
+//       <View style={styles.btnContainer}>
+//         <Button title="Next" onPress={goToNext} />
+//         <Button title="Previous" onPress={goToPrevious} />
+//       </View>
+//     </ScrollView>
+//   );
+// }
 
 // const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -103,7 +104,7 @@ function App() {
     },
   ];
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <ProgressStepperVerticalProvider
         height={500}
         steps={STEPS}
@@ -122,11 +123,33 @@ function App() {
             <Image source={require('../assets/box.png')} style={styles.image} />
           );
         }}
+        stepStyle={{
+          width: 34,
+          height: 34,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 17,
+          borderWidth: 4,
+          borderColor: 'white',
+        }}
         activeColor="#E44949"
         trackActiveColor="#E44949"
         trackWidth={3}
       >
-        <ProgressStepperExample />
+        {/* <ProgressStepperExample />
+         */}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ProgressStepperLive
+            animationVariation="bounce"
+            animationDuration={700}
+          />
+        </View>
       </ProgressStepperVerticalProvider>
     </SafeAreaView>
   );
