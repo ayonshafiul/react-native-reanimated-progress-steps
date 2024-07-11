@@ -18,7 +18,7 @@ _Live progress tracking animated components for react native projects_
 
 ### [Vertical](https://react-native-reanimated-progress-steps.vercel.app/docs/components/progress_stepper_vertical)
 
-<img src="https://raw.githubusercontent.com/ayonshafiul/react-native-reanimated-progress-steps-docs/main/static/img/vertical.gif" width="250"/>
+<img src="https://react-native-reanimated-progress-steps.vercel.app/img/vertical-custom-inner.gif" width="250"/>
 </p>
 
 <p style="align:center">
